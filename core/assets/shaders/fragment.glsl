@@ -24,22 +24,29 @@ void main()
         debugColor.r = 1.0;
         debugColor.b = 0.5;
     }
-
     // para calcular a componente difusa, precisamos:
-    // vec3 normal = ...
-    // vec3 incidenciaLuz = ...
+    vec3 normal = normalize(v_fragNormal);
+    vec3 incidenciaLuz = normalize(-u_dirLights0direction);
+    vec3 incidenciaLuz2 = normalize(-u_dirLights1direction);
+    
 
     // para calcular a componente especular, precisamos:
-    // vec3 visualizacao = ...
-    // vec3 reflexao = ...
+    vec3 visualizacao = normalize(-v_fragPosition);
+    vec3 reflexao = normalize(reflect(incidenciaLuz, normal));
+    vec3 reflexao2 = normalize(reflect(incidenciaLuz, normal));
 
     // calcula as 3 componentes de Phong: ambiente, difusa, especular
-    // vec4 ambiente = ...
-    // vec4 difusa = ...
-    // vec4 especular = ...
+    vec4 ambiente = vec4(0.1, 0.1, 0.1, 1.0);
+    vec4 difusa = max(dot(normal, incidenciaLuz), 0.0)*texture2D(u_diffuseTexture, v_texCoords)*u_dirLights0color;
+    vec4 difusa2 = max(dot(normal, incidenciaLuz2), 0.0)*texture2D(u_diffuseTexture, v_texCoords)*u_dirLights1color;
+    vec4 especular = pow(max(dot(visualizacao, reflexao), 0.0),5.0)*u_dirLights0color;
+    vec4 especular2 = pow(max(dot(visualizacao, reflexao2), 0.0),5.0)*u_dirLights1color;
+
+    vec4 corFinal = ambiente + difusa + difusa2 + 0.2*(especular+especular2);
+    //vec4 corFinal = ambiente + difusa + 0.2*(especular);
 
     // Dá o resultado
-    gl_FragColor = vec4(v_fragNormal, 1.0);
+    gl_FragColor = corFinal;
 
     // DEBUG: para depurar, use a linha a seguir para definir a cor do fragmento
     //gl_FragColor = debugColor;

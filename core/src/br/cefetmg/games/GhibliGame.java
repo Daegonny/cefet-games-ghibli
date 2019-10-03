@@ -47,7 +47,7 @@ public class GhibliGame extends ApplicationAdapter {
     private static final float CAMERA_MOVEMENT_DURATION = 2f;
     
     private Model totoroModel, meiModel;
-    private ModelInstance totoro, mei;
+    private ModelInstance totoro, totoro2, mei;
     private AnimationController meiWalking;
     private float light1Angle = 0;
     private DirectionalLight light1;
@@ -81,9 +81,16 @@ public class GhibliGame extends ApplicationAdapter {
         ModelLoader fbxLoader = new G3dModelLoader(new JsonReader());
         totoroModel = objLoader.loadModel(Gdx.files.internal("models/totoronico.obj"), new ObjLoaderParameters(true));
         totoro = new ModelInstance(totoroModel);
+        totoro2 = new ModelInstance(totoroModel);
         totoro.transform.setToTranslation(10, 0, 0);
         totoro.transform.mul(new Matrix4().setToScaling(20, 20, 20));
         totoro.transform.mul(new Matrix4().setToRotation(Vector3.Y, -30));
+        
+        totoro2.transform.setToTranslation(35, 0, 0);
+        totoro2.transform.mul(new Matrix4().setToScaling(20, 20, 20));
+        totoro2.transform.mul(new Matrix4().setToRotation(Vector3.Y, -30));
+
+
         
 //        Renderable totoroRenderable = new Renderable();
 //        totoro.getRenderable(totoroRenderable);
@@ -123,6 +130,7 @@ public class GhibliGame extends ApplicationAdapter {
 
         modelBatch.begin(camera);
         modelBatch.render(totoro, environment, meuPrimeiroShader);
+        modelBatch.render(totoro2, environment, meuPrimeiroShader);
         modelBatch.render(mei, environment);
         modelBatch.end();
     }
